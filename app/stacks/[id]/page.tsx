@@ -9,7 +9,7 @@ import React, { useEffect } from 'react';
 
 import { getComponents } from '../../api/components';
 import { getStackDetails } from '../../api/stacks';
-import ComponentDialog from '../../components/ComponentDialog';
+import ComponentDialog from '../../components/componentDialog';
 import ErrorPage from '../../errorPage';
 import LoadingPage from '../../loadingPage';
 import { Edge, Node } from '../../types/flow';
