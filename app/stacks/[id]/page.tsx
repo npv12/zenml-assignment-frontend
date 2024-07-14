@@ -8,18 +8,9 @@ import 'reactflow/dist/style.css';
 
 import { Edge, Node } from '../../types/flow';
 import { StackData } from '../../types/Stacks';
-import { BASE_BACKEND_URL } from '../../utils/constants';
+import { getStackDetails } from '../../api/stacks';
 
-async function getStackDetails(id: string) {
-    return (await fetch(`${BASE_BACKEND_URL}/stacks/${id}`).then((res) => {
-        if (res.status === 200) {
-            return res.json();
-        }
-        // something went wrong while fetching the data.
-        // all error handling happens across here.
-        throw new Error('Failed to fetch stacks');
-    })) as StackData;
-}
+
 
 const getNodesAndEdges = (
     stackData: StackData,

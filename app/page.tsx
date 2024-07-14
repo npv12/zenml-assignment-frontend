@@ -6,18 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Fragment } from 'react';
 
-import { BASE_BACKEND_URL } from './utils/constants';
-
-async function getStacks() {
-    return (await fetch(`${BASE_BACKEND_URL}/stacks`).then((res) => {
-        if (res.status === 200) {
-            return res.json();
-        }
-        // something went wrong while fetching the data.
-        // all error handling happens across here.
-        throw new Error('Failed to fetch stacks');
-    })) as any[];
-}
+import { getStacks } from './api/stacks';
 
 export default function Stacks() {
     const {
