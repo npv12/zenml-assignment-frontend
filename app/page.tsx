@@ -1,11 +1,13 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import { getStacks } from './api/stacks';
+import { StackData } from './types/Stacks';
 import { convertSlugToTitle, truncateLabel } from './utils/common';
 
 export default function Stacks() {
@@ -13,7 +15,7 @@ export default function Stacks() {
         data: allStacks,
         isLoading: isStacksLoading,
         error: stacksFetchError,
-    } = useQuery<any[]>({
+    } = useQuery<StackData[]>({
         queryKey: ['stream-hydrate-stacks'],
         queryFn: () => getStacks(),
         staleTime: 5 * 1000,
@@ -48,11 +50,11 @@ export default function Stacks() {
                             {truncateLabel(convertSlugToTitle(stacks.name))}
                         </h4>
                         <p className="m-2">
-                            <strong>User:</strong> {stacks.user}
+                            <strong>User ID:</strong> {stacks.user}
                         </p>
                         <p className="m-2">
                             {' '}
-                            <strong>Project:</strong> {stacks.project}
+                            <strong>Project ID:</strong> {stacks.project}
                         </p>
                         {stacks.description && (
                             <p className="m-2">
@@ -61,6 +63,27 @@ export default function Stacks() {
                                 {stacks.description}
                             </p>
                         )}
+                        <div className="grid place-items-center grid-cols-2 gap-3">
+                            {Object.keys(stacks.components).map(
+                                (componentType: string) => (
+                                    <Badge
+                                        variant="secondary"
+                                        className="p-1 d-flex justify-content-center align-items-center"
+                                        style={{
+                                            width: '120px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <p className="m-0 text-center">
+                                            {convertSlugToTitle(componentType)}
+                                        </p>
+                                    </Badge>
+                                ),
+                            )}
+                        </div>
+
                         <Button className="m-2">
                             <Link href={`/stacks/${stacks.id}`}>
                                 View Details
