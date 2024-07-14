@@ -1,78 +1,21 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { ReactFlow, useReactFlow } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
-import 'reactflow/dist/style.css';
 
+import { getStackDetails } from '../../api/stacks';
 import { Edge, Node } from '../../types/flow';
 import { StackData } from '../../types/Stacks';
-import { getStackDetails } from '../../api/stacks';
+import { getNodesAndEdges } from '../../utils/flow';
 
-
-
-const getNodesAndEdges = (
-    stackData: StackData,
-): { nodes: Node[]; edges: Edge[] } => {
-    const nodes: Node[] = [
-        {
-            id: '1',
-            type: 'input',
-            data: { label: `${stackData.name}` },
-            position: { x: 250, y: 0 },
-        },
-        {
-            id: '2',
-            data: { label: `Project: ${stackData.project}` },
-            position: { x: 400, y: 100 },
-        },
-        {
-            id: '3',
-            data: { label: `User: ${stackData.user}` },
-            position: { x: 100, y: 100 },
-        },
-    ];
-
-    const edges: Edge[] = [
-        { id: 'e1-2', source: '1', target: '2', animated: true },
-        { id: 'e1-3', source: '1', target: '3', animated: true },
-        { id: 'e2-4', source: '2', target: '4', animated: true },
-    ];
-
-    let positionY = 200;
-    let nodeId = 4;
-
-    for (const [componentType, componentIds] of Object.entries(
-        stackData.components,
-    )) {
-        componentIds.forEach((componentId, index) => {
-            const node: Node = {
-                id: `${nodeId}`,
-                data: { label: `${componentType}: ${componentId}` },
-                position: { x: 250, y: positionY },
-            };
-            nodes.push(node);
-
-            const edge: Edge = {
-                id: `e${nodeId - 1}-${nodeId}`,
-                source: `${nodeId - 1}`,
-                target: `${nodeId}`,
-                animated: true,
-            };
-
-            edges.push(edge);
-
-            nodeId++;
-            positionY += 150;
-        });
-    }
-
-    return { nodes, edges };
-};
-
-const FlowChart = () => {
+const VisualiseStack = () => {
+    const reactFlow = useReactFlow();
     const { id } = useParams();
+    const router = useRouter();
     const {
         data: stacksData,
         isLoading: isStacksLoading,
@@ -82,6 +25,25 @@ const FlowChart = () => {
         queryFn: () => getStackDetails(id as string),
         staleTime: 5 * 1000,
     });
+
+    const [nodes, setNodes] = React.useState<Node[]>([]);
+    const [edges, setEdges] = React.useState<Edge[]>([]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (stacksData) {
+                const { nodes, edges } = getNodesAndEdges(stacksData);
+                setNodes(nodes);
+                setEdges(edges);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [stacksData]);
+
     if (!stacksData) {
         return <div>No stacks found</div>;
     }
@@ -94,24 +56,30 @@ const FlowChart = () => {
         return <div>Error: {stacksFetchError.message}</div>;
     }
 
-    const [nodes, setNodes] = React.useState<Node[]>([]);
-    const [edges, setEdges] = React.useState<Edge[]>([]);
-
-    useEffect(() => {
-        const { nodes, edges } = getNodesAndEdges(stacksData);
-        setNodes(nodes);
-        setEdges(edges);
-    }, [stacksData]);
+    const fitView = () => {
+        reactFlow.fitView();
+    };
 
     return (
-        <div style={{ height: '100vh' }}>
-            <ReactFlow nodes={nodes} edges={edges}>
-                <MiniMap />
-                <Controls />
-                <Background />
-            </ReactFlow>
+        <div className="flex min-h-screen flex-col" style={{ height: '100vh' }}>
+            <header className="m-auto mb-5 mt-10 flex justify-between items-center w-full">
+                <Button className="ml-8" onClick={() => router.push(`/`)}>
+                    <h4 className="scroll-m-20 text-l font-semibold tracking-tight p-2">
+                        Dashboard
+                    </h4>
+                </Button>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    My Stack
+                </h1>
+                <Button className="mr-8" onClick={fitView}>
+                    <h4 className="scroll-m-20 text-l font-semibold tracking-tight">
+                        Fit View
+                    </h4>
+                </Button>
+            </header>
+            <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>
         </div>
     );
 };
 
-export default FlowChart;
+export default VisualiseStack;

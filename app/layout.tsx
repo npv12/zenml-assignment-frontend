@@ -1,3 +1,4 @@
+import { ReactFlowProvider } from '@xyflow/react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
@@ -20,7 +21,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <Provider>{children}</Provider>
+                <ReactFlowProvider>
+                    <Provider>{children}</Provider>
+                </ReactFlowProvider>
             </body>
         </html>
     );
