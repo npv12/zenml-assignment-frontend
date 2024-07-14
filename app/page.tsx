@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { Fragment } from 'react';
 
 import { getStacks } from './api/stacks';
+import { convertSlugToTitle, truncateLabel } from './utils/common';
 
 export default function Stacks() {
     const {
@@ -32,48 +32,43 @@ export default function Stacks() {
     }
 
     return (
-        <Fragment>
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                    gap: 20,
-                }}
-            >
+        <div className="min-h-screen p-20">
+            <header className="m-auto mb-5 flex justify-center items-center">
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    All Stacks
+                </h1>
+            </header>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-5">
                 {allStacks?.map((stacks) => (
                     <Card
                         key={stacks.id}
-                        style={{
-                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-                            margin: '10px',
-                            borderRadius: '8px',
-                            padding: '20px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between',
-                        }}
+                        className="shadow m-2.5 rounded-lg p-5 flex flex-col justify-between"
                     >
-                        <h2>{stacks.name}</h2>
-                        <p>{stacks.description}</p>
-                        <div style={{ marginTop: 'auto' }}>
-                            <Button
-                                style={{
-                                    marginTop: 'auto',
-                                    color: 'white',
-                                    padding: '10px',
-                                    borderRadius: '4px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                }}
-                            >
-                                <Link href={`/stacks/${stacks.id}`}>
-                                    View Details
-                                </Link>
-                            </Button>
-                        </div>
+                        <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">
+                            {truncateLabel(convertSlugToTitle(stacks.name))}
+                        </h4>
+                        <p className="m-2">
+                            <strong>User:</strong> {stacks.user}
+                        </p>
+                        <p className="m-2">
+                            {' '}
+                            <strong>Project:</strong> {stacks.project}
+                        </p>
+                        {stacks.description && (
+                            <p className="m-2">
+                                {' '}
+                                <strong>Description:</strong>{' '}
+                                {stacks.description}
+                            </p>
+                        )}
+                        <Button className="m-2">
+                            <Link href={`/stacks/${stacks.id}`}>
+                                View Details
+                            </Link>
+                        </Button>
                     </Card>
                 ))}
             </div>
-        </Fragment>
+        </div>
     );
 }

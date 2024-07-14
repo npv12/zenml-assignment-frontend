@@ -1,13 +1,7 @@
 import { Edge, Node } from '../types/flow';
 import { StackData } from '../types/Stacks';
-import { MOBILE_VIEW_WIDTH, TRUNCATE_LABEL_LENGTH } from './constants';
-
-const truncateLabel = (label: string): string => {
-    if (label.length <= TRUNCATE_LABEL_LENGTH) {
-        return label;
-    }
-    return `${label.slice(0, TRUNCATE_LABEL_LENGTH)}...`;
-};
+import { truncateLabel } from './common';
+import { MOBILE_VIEW_WIDTH } from './constants';
 
 // Since padding is applied to entire page, react flow doesn't account for it
 // To keep it still centered. This is a hack
