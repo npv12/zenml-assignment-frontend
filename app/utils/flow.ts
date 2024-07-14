@@ -1,6 +1,6 @@
 import { Edge, Node } from '../types/flow';
-import { StackData } from '../types/stacks';
-import { truncateLabel } from './common';
+import { ComponentData, StackData } from '../types/stacks';
+import { convertSlugToTitle } from './common';
 import { MOBILE_VIEW_WIDTH } from './constants';
 
 // Since padding is applied to entire page, react flow doesn't account for it
@@ -9,6 +9,7 @@ const MISALIGN_X_OFFSET = 75;
 
 const addNodesEdgesForDesktop = (
     stackData: StackData,
+    componentData: ComponentData[] | undefined,
     edges: Edge[],
     nodes: Node[],
     startY: number,
@@ -22,12 +23,19 @@ const addNodesEdgesForDesktop = (
         stackData.components,
     )) {
         componentIds.forEach((componentId, _) => {
+            const component = componentData?.find(
+                (component) => component.id === componentId,
+            );
+            let label = `${convertSlugToTitle(componentType)} ID: ${componentId}`;
+            if (component) {
+                label = `${convertSlugToTitle(componentType)} named ${convertSlugToTitle(component.name)} of flavor ${component.flavor}`;
+            }
             // based on odd and even push the node to left or right
             const positionY = nodeId % 2 === 0 ? startY + 300 : startY + 400;
             const node: Node = {
-                id: `${nodeId}`,
+                id: `${nodeId}_${componentId}`,
                 data: {
-                    label: `${componentType}: ${componentId}`,
+                    label: label,
                 },
                 position: { x: positionX, y: positionY },
             };
@@ -36,7 +44,7 @@ const addNodesEdgesForDesktop = (
             const edge: Edge = {
                 id: `e${nodeId - 1}-${nodeId}`,
                 source: `3`,
-                target: `${nodeId}`,
+                target: `${nodeId}_${componentId}`,
                 animated: true,
             };
 
@@ -62,22 +70,30 @@ const addNodesEdgesForDesktop = (
 
 const addNodesEdgesForMobile = (
     stackData: StackData,
+    componentData: ComponentData[] | undefined,
     edges: Edge[],
     nodes: Node[],
     midX: number,
     midY: number,
 ): { nodes: Node[]; edges: Edge[] } => {
     let nodeId = nodes.length + 1;
-    let positionY = midY + 150;
+    let positionY = midY;
 
     for (const [componentType, componentIds] of Object.entries(
         stackData.components,
     )) {
         componentIds.forEach((componentId, _) => {
+            const component = componentData?.find(
+                (component) => component.id === componentId,
+            );
+            let label = `${convertSlugToTitle(componentType)} ID: ${componentId}`;
+            if (component) {
+                label = `${convertSlugToTitle(componentType)} named ${convertSlugToTitle(component.name)} of flavor ${component.flavor}`;
+            }
             const node: Node = {
-                id: `${nodeId}`,
+                id: `${nodeId}_${componentId}`,
                 data: {
-                    label: `${componentType}: ${componentId}`,
+                    label: label,
                 },
                 position: { x: midX - MISALIGN_X_OFFSET, y: positionY },
             };
@@ -86,14 +102,14 @@ const addNodesEdgesForMobile = (
             const edge: Edge = {
                 id: `e3-${nodeId}`,
                 source: `3`,
-                target: `${nodeId}`,
+                target: `${nodeId}_${componentId}`,
                 animated: true,
             };
 
             edges.push(edge);
 
             nodeId++;
-            positionY += 150;
+            positionY += 100;
         });
     }
 
@@ -102,6 +118,7 @@ const addNodesEdgesForMobile = (
 
 export const getNodesAndEdges = (
     stackData: StackData | undefined,
+    componentsData: ComponentData[] | undefined,
 ): { nodes: Node[]; edges: Edge[] } => {
     if (!stackData) {
         return { nodes: [], edges: [] };
@@ -113,18 +130,18 @@ export const getNodesAndEdges = (
         {
             id: '1',
             type: 'input',
-            data: { label: truncateLabel(`${stackData.name}`) },
+            data: { label: convertSlugToTitle(stackData.name) },
             position: { x: midX - MISALIGN_X_OFFSET, y: startY },
         },
         {
             id: '2',
-            data: { label: `Project: ${stackData.project}` },
-            position: { x: midX - MISALIGN_X_OFFSET, y: startY + 50 },
+            data: { label: `Project ID: ${stackData.project}` },
+            position: { x: midX - MISALIGN_X_OFFSET, y: startY + 100 },
         },
         {
             id: '3',
-            data: { label: `User: ${stackData.user}` },
-            position: { x: midX - MISALIGN_X_OFFSET, y: startY + 150 },
+            data: { label: `User ID: ${stackData.user}` },
+            position: { x: midX - MISALIGN_X_OFFSET, y: startY + 200 },
         },
     ];
 
@@ -134,7 +151,21 @@ export const getNodesAndEdges = (
     ];
 
     if (window.innerWidth <= MOBILE_VIEW_WIDTH) {
-        return addNodesEdgesForMobile(stackData, edges, nodes, midX, midY);
+        return addNodesEdgesForMobile(
+            stackData,
+            componentsData,
+            edges,
+            nodes,
+            midX,
+            midY,
+        );
     }
-    return addNodesEdgesForDesktop(stackData, edges, nodes, startY, midX);
+    return addNodesEdgesForDesktop(
+        stackData,
+        componentsData,
+        edges,
+        nodes,
+        startY,
+        midX,
+    );
 };

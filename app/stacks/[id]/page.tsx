@@ -10,9 +10,11 @@ import React, { useEffect } from 'react';
 import { getStackDetails } from '../../api/stacks';
 import LoadingPage from '../../loadingPage';
 import { Edge, Node } from '../../types/flow';
-import { StackData } from '../../types/stacks';
+import { ComponentData, StackData } from '../../types/stacks';
 import { getNodesAndEdges } from '../../utils/flow';
 import ErrorPage from '../../errorPage';
+import { getComponents } from '../../api/components';
+import ComponentDialog from '../../components/ComponentDialog';
 
 const VisualiseStack = () => {
     const reactFlow = useReactFlow();
@@ -28,13 +30,41 @@ const VisualiseStack = () => {
         staleTime: 5 * 1000,
     });
 
+    const {
+        data: componentsData,
+        isLoading: isComponentsLoading,
+        error: componentFetchError,
+    } = useQuery<ComponentData[]>({
+        queryKey: ['stream-hydrate-components'],
+        queryFn: () => getComponents(),
+        staleTime: 5 * 1000,
+    });
+
     const [nodes, setNodes] = React.useState<Node[]>([]);
     const [edges, setEdges] = React.useState<Edge[]>([]);
+    const [currentComponent, setCurrentComponent] =
+        React.useState<ComponentData>();
+    const [isModelOpen, setIsModelOpen] = React.useState(false);
+
+    const handleNodeClick = (_: React.MouseEvent, node: Node) => {
+        // The cases which arent a component
+        if (node.id === '1' || node.id === '2' || node.id === '3') return;
+        const componentId = node.id.split('_')[1];
+        const component = componentsData?.find(
+            (component) => component.id === componentId,
+        );
+        if (!component) return;
+        setCurrentComponent(component);
+        setIsModelOpen(true);
+    };
 
     useEffect(() => {
         const handleResize = () => {
             if (stacksData) {
-                const { nodes, edges } = getNodesAndEdges(stacksData);
+                const { nodes, edges } = getNodesAndEdges(
+                    stacksData,
+                    componentsData,
+                );
                 setNodes(nodes);
                 setEdges(edges);
             }
@@ -44,13 +74,13 @@ const VisualiseStack = () => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [stacksData]);
+    }, [stacksData, componentsData]);
 
-    if (isStacksLoading) {
+    if (isStacksLoading || isComponentsLoading) {
         return <LoadingPage text="Fetching stack details...." />;
     }
 
-    if (stacksFetchError) {
+    if (stacksFetchError || componentFetchError) {
         return <ErrorPage text={`Something went wrong while fetching data`} />;
     }
 
@@ -88,7 +118,20 @@ const VisualiseStack = () => {
                     </h4>
                 </Button>
             </header>
-            <ReactFlow nodes={nodes} edges={edges} fitView></ReactFlow>
+            <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                fitView
+                onNodeClick={handleNodeClick}
+            />
+            <ComponentDialog
+                componentData={currentComponent}
+                isOpen={isModelOpen}
+                onClose={() => {
+                    setIsModelOpen(false);
+                    setCurrentComponent(undefined);
+                }}
+            />
         </div>
     );
 };
