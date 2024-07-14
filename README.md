@@ -2,12 +2,19 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, Install all packages using:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
 ```
 
+NOTE: I have used node version v18.19.0 and npm version 9.2.0. However, it should run on any latest versions of the same.
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 solution to the challenge. The main page showcases all the stacks the user has created. The user can click on a view details button to see the details of the stack which visualises the stack with the configurations used. You can click on individual configuration to see the details of the configuration.
 
