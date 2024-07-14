@@ -5,7 +5,7 @@ import { MOBILE_VIEW_WIDTH } from './constants';
 
 // Since padding is applied to entire page, react flow doesn't account for it
 // To keep it still centered. This is a hack
-const MISALIGN_X_OFFSET = 75;
+const MISALIGN_X_OFFSET = 60;
 
 const addNodesEdgesForDesktop = (
     stackData: StackData,
