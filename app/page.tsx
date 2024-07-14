@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -46,14 +47,41 @@ export default function Stacks() {
             <div
                 style={{
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
                     gap: 20,
                 }}
             >
                 {allStacks?.map((stacks) => (
-                    <Card key={stacks.id}>
-                        <h3>{stacks.name}</h3>
-                        <Link href={`/stacks/${stacks.id}`}>View Details</Link>
+                    <Card
+                        key={stacks.id}
+                        style={{
+                            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                            margin: '10px',
+                            borderRadius: '8px',
+                            padding: '20px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <h2>{stacks.name}</h2>
+                        <p>{stacks.description}</p>
+                        <div style={{ marginTop: 'auto' }}>
+                            <Button
+                                style={{
+                                    marginTop: 'auto',
+                                    color: 'white',
+                                    padding: '10px',
+                                    borderRadius: '4px',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                }}
+                            >
+                                <Link href={`/stacks/${stacks.id}`}>
+                                    View Details
+                                </Link>
+                            </Button>
+                        </div>
                     </Card>
                 ))}
             </div>
