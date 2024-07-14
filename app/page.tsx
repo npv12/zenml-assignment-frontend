@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 import { Fragment } from 'react';
 
 import { BASE_BACKEND_URL } from './utils/constants';
@@ -42,21 +43,20 @@ export default function Stacks() {
 
     return (
         <Fragment>
-            {
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr 1fr 1fr',
-                        gap: 20,
-                    }}
-                >
-                    {allStacks?.map((stacks) => (
-                        <Card key={stacks.id}>
-                            <h3>{stacks.name}</h3>
-                        </Card>
-                    ))}
-                </div>
-            }
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr 1fr 1fr',
+                    gap: 20,
+                }}
+            >
+                {allStacks?.map((stacks) => (
+                    <Card key={stacks.id}>
+                        <h3>{stacks.name}</h3>
+                        <Link href={`/stacks/${stacks.id}`}>View Details</Link>
+                    </Card>
+                ))}
+            </div>
         </Fragment>
     );
 }
