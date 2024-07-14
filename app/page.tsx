@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { getStacks } from './api/stacks';
 import ErrorPage from './errorPage';
@@ -13,6 +13,7 @@ import { StackData } from './types/stacks';
 import { convertSlugToTitle, truncateLabel } from './utils/common';
 
 export default function Stacks() {
+    const router = useRouter();
     const {
         data: allStacks,
         isLoading: isStacksLoading,
@@ -95,10 +96,11 @@ export default function Stacks() {
                             )}
                         </div>
 
-                        <Button className="m-2">
-                            <Link href={`/stacks/${stacks.id}`}>
-                                View Details
-                            </Link>
+                        <Button
+                            className="m-2"
+                            onClick={() => router.push(`/stacks/${stacks.id}`)}
+                        >
+                            View Details
                         </Button>
                     </Card>
                 ))}
