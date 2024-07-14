@@ -1,5 +1,5 @@
 import { Edge, Node } from '../types/flow';
-import { StackData } from '../types/Stacks';
+import { StackData } from '../types/stacks';
 import { truncateLabel } from './common';
 import { MOBILE_VIEW_WIDTH } from './constants';
 

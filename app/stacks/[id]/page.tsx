@@ -8,10 +8,11 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 import { getStackDetails } from '../../api/stacks';
-import LoadingPage from '../../LoadingPage';
+import LoadingPage from '../../loadingPage';
 import { Edge, Node } from '../../types/flow';
-import { StackData } from '../../types/Stacks';
+import { StackData } from '../../types/stacks';
 import { getNodesAndEdges } from '../../utils/flow';
+import ErrorPage from '../../errorPage';
 
 const VisualiseStack = () => {
     const reactFlow = useReactFlow();
@@ -50,7 +51,7 @@ const VisualiseStack = () => {
     }
 
     if (stacksFetchError) {
-        return <div>Error: {stacksFetchError.message}</div>;
+        return <ErrorPage text={`Something went wrong while fetching data`} />;
     }
 
     if (!stacksData) {

@@ -7,8 +7,9 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import { getStacks } from './api/stacks';
-import LoadingPage from './LoadingPage';
-import { StackData } from './types/Stacks';
+import ErrorPage from './errorPage';
+import LoadingPage from './loadingPage';
+import { StackData } from './types/stacks';
 import { convertSlugToTitle, truncateLabel } from './utils/common';
 
 export default function Stacks() {
@@ -27,7 +28,7 @@ export default function Stacks() {
     }
 
     if (stacksFetchError) {
-        return <div>Error: {stacksFetchError.message}</div>;
+        return <ErrorPage text={`Something went wrong while fetching data`} />;
     }
 
     if (!allStacks) {
