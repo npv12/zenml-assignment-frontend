@@ -7,6 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import { getStacks } from './api/stacks';
+import LoadingPage from './LoadingPage';
 import { StackData } from './types/Stacks';
 import { convertSlugToTitle, truncateLabel } from './utils/common';
 
@@ -22,7 +23,7 @@ export default function Stacks() {
     });
 
     if (isStacksLoading) {
-        return <div>Loading...</div>;
+        return <LoadingPage text="Fetching all stacks...." />;
     }
 
     if (stacksFetchError) {

@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 import { getStackDetails } from '../../api/stacks';
+import LoadingPage from '../../LoadingPage';
 import { Edge, Node } from '../../types/flow';
 import { StackData } from '../../types/Stacks';
 import { getNodesAndEdges } from '../../utils/flow';
@@ -44,16 +45,16 @@ const VisualiseStack = () => {
         };
     }, [stacksData]);
 
-    if (!stacksData) {
-        return <div>No stacks found</div>;
-    }
-
     if (isStacksLoading) {
-        return <div>Loading...</div>;
+        return <LoadingPage text="Fetching stack details...." />;
     }
 
     if (stacksFetchError) {
         return <div>Error: {stacksFetchError.message}</div>;
+    }
+
+    if (!stacksData) {
+        return <div>No stacks found</div>;
     }
 
     const fitView = () => {
