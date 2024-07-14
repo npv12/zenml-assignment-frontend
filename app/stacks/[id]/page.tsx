@@ -55,7 +55,16 @@ const VisualiseStack = () => {
     }
 
     if (!stacksData) {
-        return <div>No stacks found</div>;
+        return (
+            <div
+            className="flex min-h-screen flex-col items-center justify-center"
+            style={{ height: '100vh' }}
+            >
+            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                No stacks found
+            </h1>
+            </div>
+        );
     }
 
     const fitView = () => {
