@@ -33,8 +33,10 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                                 <strong>User ID:</strong>{' '}
                                 {props.componentData.user}
                             </p>
-                            <p className='mt-2'><strong>Configuration</strong></p>
-                            <ul className='ml-2'>
+                            <p className="mt-2">
+                                <strong>Configuration</strong>
+                            </p>
+                            <ul className="ml-2">
                                 <li>
                                     Synchronous:{' '}
                                     {props.componentData.configuration

@@ -7,14 +7,14 @@ import '@xyflow/react/dist/style.css';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
+import { getComponents } from '../../api/components';
 import { getStackDetails } from '../../api/stacks';
+import ComponentDialog from '../../components/ComponentDialog';
+import ErrorPage from '../../errorPage';
 import LoadingPage from '../../loadingPage';
 import { Edge, Node } from '../../types/flow';
 import { ComponentData, StackData } from '../../types/stacks';
 import { getNodesAndEdges } from '../../utils/flow';
-import ErrorPage from '../../errorPage';
-import { getComponents } from '../../api/components';
-import ComponentDialog from '../../components/ComponentDialog';
 
 const VisualiseStack = () => {
     const reactFlow = useReactFlow();
@@ -87,18 +87,18 @@ const VisualiseStack = () => {
     if (!stacksData) {
         return (
             <div
-            className="flex min-h-screen flex-col items-center justify-center"
-            style={{ height: '100vh' }}
+                className="flex min-h-screen flex-col items-center justify-center"
+                style={{ height: '100vh' }}
             >
-            <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-                No stacks found
-            </h1>
+                <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                    No stacks found
+                </h1>
             </div>
         );
     }
 
     const fitView = () => {
-        reactFlow.fitView();
+        if (reactFlow) reactFlow.fitView();
     };
 
     return (
