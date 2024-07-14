@@ -36,6 +36,10 @@ export default function Stacks() {
         return <div>Error: {stacksFetchError.message}</div>;
     }
 
+    if (!allStacks) {
+        return <div>No stacks found</div>;
+    }
+
     return (
         <Fragment>
             {
