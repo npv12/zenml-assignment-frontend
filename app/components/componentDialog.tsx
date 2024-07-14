@@ -36,7 +36,7 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                             <p className="mt-2">
                                 <strong>Configuration</strong>
                             </p>
-                            <ul className="ml-2">
+                            <ul className="ml-5 list-disc">
                                 <li>
                                     Synchronous:{' '}
                                     {props.componentData.configuration
@@ -103,7 +103,7 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                                         : 'No'}
                                 </li>
                                 <li>
-                                    Client Args:{' '}
+                                    Client Args:
                                     <pre>
                                         {JSON.stringify(
                                             props.componentData.configuration
@@ -114,7 +114,7 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                                     </pre>
                                 </li>
                                 <li>
-                                    Node Selectors:{' '}
+                                    Node Selectors:
                                     <pre>
                                         {JSON.stringify(
                                             props.componentData.configuration
@@ -125,7 +125,7 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                                     </pre>
                                 </li>
                                 <li>
-                                    Node Affinity:{' '}
+                                    Node Affinity:
                                     <pre>
                                         {JSON.stringify(
                                             props.componentData.configuration
@@ -136,7 +136,7 @@ const ComponentDialog = (props: ComponentDialogProps) => {
                                     </pre>
                                 </li>
                                 <li>
-                                    Pod Settings:{' '}
+                                    Pod Settings:
                                     <pre>
                                         {JSON.stringify(
                                             props.componentData.configuration
