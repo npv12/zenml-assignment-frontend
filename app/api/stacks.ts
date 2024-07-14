@@ -15,6 +15,6 @@ export async function getStackDetails(id: string) {
         if (res.status === 200) {
             return res.json();
         }
-        throw new Error('Failed to fetch stacks');
+        throw new Error('Failed to fetch stack details');
     })) as StackData;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 
+// SVG are taken from https://www.iconpacks.net/free-icon/error-10375.html
 const ErrorPage = (props: { text?: string }) => {
     return (
         <div
@@ -21,7 +22,7 @@ const ErrorPage = (props: { text?: string }) => {
                 width="128"
                 height="128"
                 viewBox="0 0 128 128"
-                style={{ fill: 'red' }} // Add this line to make the svg red
+                style={{ fill: 'red' }}
             >
                 <defs></defs>
                 <g transform="translate(0.703125 0.703125) scale(1.40625 1.40625)">

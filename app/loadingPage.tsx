@@ -1,5 +1,6 @@
 import React from 'react';
 
+// SVG is taken from https://loading.io/
 const LoadingPage = (props: { text?: string }) => {
     return (
         <div

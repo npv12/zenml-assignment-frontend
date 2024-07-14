@@ -30,9 +30,10 @@ const addNodesEdgesForDesktop = (
             if (component) {
                 label = `${convertSlugToTitle(componentType)} named ${convertSlugToTitle(component.name)} of flavor ${component.flavor}`;
             }
-            // based on odd and even push the node to left or right
+            // based on odd and even push the node to up or down
             const positionY = nodeId % 2 === 0 ? startY + 300 : startY + 400;
             const node: Node = {
+                // So that componentId can be reused to open the model correctly
                 id: `${nodeId}_${componentId}`,
                 data: {
                     label: label,
@@ -91,6 +92,7 @@ const addNodesEdgesForMobile = (
                 label = `${convertSlugToTitle(componentType)} named ${convertSlugToTitle(component.name)} of flavor ${component.flavor}`;
             }
             const node: Node = {
+                // So that componentId can be reused to open the model correctly
                 id: `${nodeId}_${componentId}`,
                 data: {
                     label: label,
@@ -150,6 +152,7 @@ export const getNodesAndEdges = (
         { id: 'e2-3', source: '2', target: '3', animated: true },
     ];
 
+    // When in mobile view, arrange them vertically instead of horizontally
     if (window.innerWidth <= MOBILE_VIEW_WIDTH) {
         return addNodesEdgesForMobile(
             stackData,

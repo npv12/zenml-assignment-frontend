@@ -49,10 +49,14 @@ const VisualiseStack = () => {
     const handleNodeClick = (_: React.MouseEvent, node: Node) => {
         // The cases which arent a component
         if (node.id === '1' || node.id === '2' || node.id === '3') return;
+
+        // Nodes are always id as `<number>_<componentId>`
+        // So we split the id and get the componentId
         const componentId = node.id.split('_')[1];
         const component = componentsData?.find(
             (component) => component.id === componentId,
         );
+        // If component is not found, we dont open the dialog
         if (!component) return;
         setCurrentComponent(component);
         setIsModelOpen(true);
@@ -69,6 +73,8 @@ const VisualiseStack = () => {
                 setEdges(edges);
             }
         };
+
+        // change the graph based on listening to the window sizes
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => {
@@ -81,7 +87,7 @@ const VisualiseStack = () => {
     }
 
     if (stacksFetchError || componentFetchError) {
-        return <ErrorPage text={`Something went wrong while fetching data`} />;
+        return <ErrorPage text="Something went wrong while fetching data" />;
     }
 
     if (!stacksData) {
